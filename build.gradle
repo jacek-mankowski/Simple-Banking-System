@@ -1,0 +1,53 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.xerial:sqlite-jdbc:3.30.1'
+}
+
+application {
+	application.applicationName = 'SimpleBankingSystem'
+	mainClass = 'banking.Main'
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+jar {
+	archiveBaseName.set(application.applicationName)
+	archiveExtension.set('jar')
+	manifest {
+		attributes(
+			'Built-By'       : System.properties.getProperty('user.name'),
+			'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+			'Built-With'     : "Gradle ${gradle.gradleVersion}",
+			'Build-Jdk'      : "${System.properties.getProperty('java.version')} (${System.properties.getProperty('java.vendor')} ${System.properties.getProperty('java.vm.version')})",
+			'Build-OS'       : "${System.properties.getProperty('os.name')} ${System.properties.getProperty('os.arch')} ${System.properties.getProperty('os.version')}",
+			'Main-Class'     : application.mainClass,
+			'Class-Path'     : configurations.runtimeClasspath.collect { it.getName() }.join(' ')
+		)
+	}
+	from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+run {
+    standardInput = System.in
+}
+
+tasks.register("allDeps", DependencyReportTask) {
+	setConfiguration("runtimeClasspath")
+}

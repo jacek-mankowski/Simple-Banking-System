@@ -1,0 +1,34 @@
+*.svn
+*.git
+
+# Class file
+*.class
+
+# Log file
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# MAVEN
+**/classes/
+**/target/
+
+#Gradle
+**/build/
+**/.gradle/
+
+# Eclipse
+*.settings
+*.classpath
+*.project
+*.prefs
+
+# IDEA
+*.idea
+*.iml
